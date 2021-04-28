@@ -16,13 +16,13 @@
   ```
 
 # terraformを使って、dynamodbを構築
-  terraform.tfvars.sampleをコピーして、terraform.tfvarsを作成する.
-    1. terraform.tfvars.sample ⇨ terraform.tfvars
-  terraform.tfvars内の設定値を自分の環境のAWS IAMアカウントのアクセスキーを設定する
-    1. aws_access_key = "" #自分のAWS環境の設定値に置き換える 
-    2. aws_secret_key = ""
-  terraformコマンドを実行
-    1. terraform init
-    2. terraform plan
-    3. terraform apply
+  1. terraform.tfvars.sampleをコピーして、terraform.tfvarsを作成する.
+    * terraform.tfvars.sample ⇨ terraform.tfvars
+  2. terraform.tfvars内の設定値を自分の環境のAWS IAMアカウントのアクセスキーを設定する
+    * aws_access_key = "" #自分のAWS環境の設定値に置き換える 
+    * aws_secret_key = ""
+  3. terraformコマンドを実行
+    * terraform init
+    * terraform plan
+    * terraform apply
     
