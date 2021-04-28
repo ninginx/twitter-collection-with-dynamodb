@@ -1,4 +1,4 @@
-# 前提
+# 1. 前提
   1. terraform インストール
   
   https://www.terraform.io/downloads.html
@@ -9,7 +9,7 @@
   brew install terraform
   ```
 
-# terraformを使って、dynamodbを構築
+# 2. terraformを使って、dynamodbを構築
   1. terraform.tfvars.sampleをコピーして、terraform.tfvarsを作成する.
     * terraform.tfvars.sample ⇨ terraform.tfvars
   2. terraform.tfvars内の設定値を自分の環境のAWS IAMアカウントのアクセスキーを設定する
@@ -22,8 +22,11 @@
     aws_secret_key = "" 
     ```
 
-  3. terraformコマンドを実行
+# 3. terraformコマンドを実行
+
     * terraform init
+
     * terraform plan
+
     * terraform apply
     
