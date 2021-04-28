@@ -16,13 +16,9 @@
     
     ```
     cp ./terraform/terraform.tfvars.sample ./terraform/terraform.tfvars
-    ```
 
-    ```
     aws_access_key = "" #自分のAWS環境の設定値に置き換える
-    ```
 
-    ```
     aws_secret_key = "" 
     ```
 
