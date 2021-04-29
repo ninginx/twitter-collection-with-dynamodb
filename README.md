@@ -1,4 +1,4 @@
-# 1. 前提
+# 前提
   1. terraform インストール
   
   https://www.terraform.io/downloads.html
@@ -8,8 +8,10 @@
   ```
   brew install terraform
   ```
+  2. twitter api 申請とBearer token発行
+  https://developer.twitter.com/en/docs/twitter-api
 
-# 2. terraformを使って、dynamodbを構築
+# terraformを使って、dynamodbを構築
   1. terraform.tfvars.sampleをコピーして、terraform.tfvarsを作成する.
     * terraform.tfvars.sample ⇨ terraform.tfvars
   2. terraform.tfvars内の設定値を自分の環境のAWS IAMアカウントのアクセスキーを設定する
@@ -22,7 +24,7 @@
     aws_secret_key = "" 
     ```
 
-# 3. terraformコマンドを実行
+# terraformコマンドを実行
 
   ```
   terraform init
@@ -31,3 +33,5 @@
 
   terraform apply
   ```
+
+# twitter apiからtweetを取得してdynamodbに書き込み
