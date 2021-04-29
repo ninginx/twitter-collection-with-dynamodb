@@ -9,6 +9,7 @@
   brew install terraform
   ```
   2. twitter api 申請とBearer token発行
+  
   https://developer.twitter.com/en/docs/twitter-api
 
 # terraformを使って、dynamodbを構築
