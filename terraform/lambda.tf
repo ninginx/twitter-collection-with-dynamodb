@@ -1,3 +1,6 @@
+variable "twitter_bearer_token" {}
+variable "twitter_id" {}
+
 resource "aws_iam_role" "iam_dynamo_for_lambda" {
   name = "iam_dynamo_for_lambda"
 
@@ -56,7 +59,8 @@ resource "aws_lambda_function" "tweet_collect_lambda" {
 
   environment {
     variables = {
-      foo = "bar"
+      TWITTER_BEARER_TOKEN = var.twitter_bearer_token
+      TWITTER_ID = var.twitter_id
     }
   }
 }
