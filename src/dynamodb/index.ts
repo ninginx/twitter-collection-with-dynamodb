@@ -6,13 +6,16 @@ AWS.config.update({
 
 const docClient = new AWS.DynamoDB.DocumentClient()
 
-export const putItem= async <T> (tableName: string,item: T): Promise<void> => {
+export const putItem= <T> (tableName: string, item: T): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    const param = {
+      TableName: tableName,
+      Item: item
+    }
+    docClient.put(param,(err)=> {
+      if(err) { reject(new Error(err.message)) }
+    })
+  })
 
-  const param = {
-    TableName: tableName,
-    Item: item
-  }
-  console.log('param',param)
-  await docClient.put(param)
 }
 

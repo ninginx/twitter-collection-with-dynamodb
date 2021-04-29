@@ -31,7 +31,7 @@ data "aws_iam_policy_document" "allow_dynamodb_access" {
       "dynamodb:PutItem",
       "dynamodb:UpdateItem"
     ]
-    resources = [ "${module.dynamodb.aws_dynamodb_table_arn}" ]
+    resources = [ module.dynamodb.aws_dynamodb_table_arn ]
   }
 }
 
@@ -41,16 +41,16 @@ resource "aws_iam_role_policy" "lambda_policy" {
   policy = data.aws_iam_policy_document.allow_dynamodb_access.json
 }
 
-resource "aws_lambda_function" "twitter_collect_lambda" {
-  filename      = "tweet-loader.zip"
-  function_name = "lambda_function_name"
+resource "aws_lambda_function" "tweet_collect_lambda" {
+  filename      = "src.zip"
+  function_name = "tweet_collect_lambda"
   role          = aws_iam_role.iam_dynamo_for_lambda.arn
-  handler       = "exports.test"
+  handler       = "exports.streamTweet"
 
   # The filebase64sha256() function is available in Terraform 0.11.12 and later
   # For Terraform 0.11.11 and earlier, use the base64sha256() function and the file() function:
   # source_code_hash = "${base64sha256(file("lambda_function_payload.zip"))}"
-  source_code_hash = filebase64sha256("tweet-loader.zip")
+  source_code_hash = filebase64sha256("src.zip")
 
   runtime = "nodejs12.x"
 

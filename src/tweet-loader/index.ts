@@ -3,38 +3,43 @@ import dotenv from 'dotenv';
 
 dotenv.config()
 
-export async function getTweet(tweets?: tweets): Promise<tweetData[]> {
-
-  const endpointUrl = "https://api.twitter.com/2/tweets/search/recent";
-  // Edit query parameters below
-  // specify a search query, and any additional fields that are required
-  // by default, only the Tweet ID and text fields are returned
-
-  const params: param = {
-    'query': `from:${process.env.TWITTER_ID} -is:retweet`,
-    'tweet.fields': 'author_id,created_at,public_metrics,entities',
-    'max_results': 100
-  }
-
-  if(tweets?.meta.next_token) {
-    params.next_token=tweets?.meta.next_token
-  }
-
-  const res: NeedleResponse  = 
-    await needle('get', endpointUrl, params, {
-    headers: {
-      "User-Agent": "v2RecentSearchJS",
-      "authorization": `Bearer ${process.env.TWITTER_BEARER_TOKEN}`
+export const getTweet = (tweets?: tweets): Promise<tweetData[]> => {
+  return new Promise((resolve, reject) => {
+    
+    const endpointUrl = "https://api.twitter.com/2/tweets/search/recent";
+    const params: param = {
+      'query': `from:${process.env.TWITTER_ID} -is:retweet`,
+      'tweet.fields': 'author_id,created_at,public_metrics,entities',
+      'max_results': 100
     }
-  })
   
-  if((res.body as tweets).meta.next_token) {
-    return (res.body as tweets).data.concat(await getTweet(res.body as tweets))
-  } else if (res.body) {
-    return (res.body as tweets).data;
-  } else {
-    throw new Error('Unsuccessful request');
-  }
+    if(tweets?.meta.next_token) {
+      params.next_token=tweets?.meta.next_token
+    }
+
+    needle('get', endpointUrl, params, {
+      headers: {
+        "User-Agent": "v2RecentSearchJS",
+        "authorization": `Bearer ${process.env.TWITTER_BEARER_TOKEN}`
+      }
+    })
+    .then((res: NeedleResponse) => {
+      if((res.body as tweets)?.meta.next_token) {
+        getTweet(res.body as tweets)
+          .then((resPage2)=>{
+            resolve((res.body as tweets).data.concat(resPage2))
+          })
+          .catch((err) => {
+            reject(new Error(err.message))
+          })
+      }
+      else{
+        resolve((res.body as tweets).data)
+      }
+    }).catch((err)=>{
+      reject(new Error(err.message))
+    })
+  })
 }
 
 type publicMetrics = {
