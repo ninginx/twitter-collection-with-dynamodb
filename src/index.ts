@@ -1,7 +1,7 @@
 import { putItem } from './dynamodb'
 import { getTweet } from './tweet-loader'
 
-export const streamTweet = (): void => {
+exports.handler = function(): void  {
   getTweet()
     .then((tweets) => {
       console.log(tweets.length)

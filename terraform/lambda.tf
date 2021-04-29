@@ -42,15 +42,15 @@ resource "aws_iam_role_policy" "lambda_policy" {
 }
 
 resource "aws_lambda_function" "tweet_collect_lambda" {
-  filename      = "src.zip"
+  filename      = "lambda.zip"
   function_name = "tweet_collect_lambda"
   role          = aws_iam_role.iam_dynamo_for_lambda.arn
-  handler       = "exports.streamTweet"
+  handler       = "index.handler"
 
   # The filebase64sha256() function is available in Terraform 0.11.12 and later
   # For Terraform 0.11.11 and earlier, use the base64sha256() function and the file() function:
   # source_code_hash = "${base64sha256(file("lambda_function_payload.zip"))}"
-  source_code_hash = filebase64sha256("src.zip")
+  source_code_hash = filebase64sha256("lambda.zip")
 
   runtime = "nodejs12.x"
 
@@ -59,4 +59,24 @@ resource "aws_lambda_function" "tweet_collect_lambda" {
       foo = "bar"
     }
   }
+}
+
+resource "aws_cloudwatch_event_rule" "daily_process" {
+  name = "daily_process"
+  description = "daily_process"
+  schedule_expression = "cron(59 23 * * ? *)"
+}
+
+resource "aws_cloudwatch_event_target" "collect_tweet_every_day" {
+  rule = aws_cloudwatch_event_rule.daily_process.name
+  target_id = "tweet_collect_lambda"
+  arn = aws_lambda_function.tweet_collect_lambda.arn
+}
+
+resource "aws_lambda_permission" "allow_collect_tweet_every_day" {
+  statement_id = "AllowExecutionFromCloudWatch"
+  action = "lambda:InvokeFunction"
+  function_name = "tweet_collect_lambda"
+  principal = "events.amazonaws.com"
+  source_arn = aws_cloudwatch_event_rule.daily_process.arn
 }

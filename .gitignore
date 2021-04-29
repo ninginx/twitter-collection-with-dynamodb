@@ -6,10 +6,13 @@ terraform/.terraform.lock.hcl
 
 # ENV
 .env
+/Lambda-Deployment
 
 # compiled output
 /dist
+*.zip
 /node_modules
+build.sh
 
 # Logs
 logs
@@ -18,7 +21,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
-
+tweet_collect_lambda-5ef1e513-8c9f-49d5-82fb-adb328ea85b8
 # OS
 .DS_Store
 
