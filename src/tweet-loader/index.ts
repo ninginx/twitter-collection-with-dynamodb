@@ -44,9 +44,9 @@ export const getTweet = (tweets?: tweets): Promise<tweetData[]> => {
 
 type publicMetrics = {
   retweet_count: number,
-  reply_count: number,
+  reply_count?: number,
   like_count: number,
-  quote_count: number
+  quote_count?: number
 }
 
 type entityMention = {
@@ -68,13 +68,13 @@ type tweetEntities = {
   annotations?: entityAnnotation[]
 }
 
-type tweetData = {
+export type tweetData = {
   text: string,
   created_at: string,
   id: string,
   public_metrics: publicMetrics,
   entities?: tweetEntities[]
-}
+} 
 
 type tweetMeta = {
   newest_id: string,

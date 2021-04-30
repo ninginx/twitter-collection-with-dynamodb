@@ -1,4 +1,5 @@
 import AWS from 'aws-sdk'
+import { ItemList, Key } from 'aws-sdk/clients/dynamodb';
 
 AWS.config.update({
   region: "ap-northeast-1"
@@ -7,15 +8,38 @@ AWS.config.update({
 const docClient = new AWS.DynamoDB.DocumentClient()
 
 export const putItem= <T> (tableName: string, item: T): Promise<void> => {
-  return new Promise((resolve, reject) => {
+  return new Promise((_, reject) => {
     const param = {
       TableName: tableName,
       Item: item
     }
     docClient.put(param,(err)=> {
-      if(err) { reject(new Error(err.message)) }
+      if(err) {reject(new Error(err.message))}
     })
   })
-
 }
 
+export const readItemsAll = (tableName: string, LastEvaluatedKey?: Key): Promise<ItemList|undefined> => {
+  return new Promise((resolve, reject)=>{
+    const param: param = {
+      TableName: tableName
+    }
+    if(LastEvaluatedKey) { param.LastEvaluatedKey = LastEvaluatedKey }
+
+    docClient.scan(param,(err, data)=>{
+      if(err) { reject(err) }
+      if(data.LastEvaluatedKey) {
+        readItemsAll(param.TableName, data.LastEvaluatedKey)
+          .then((nextItems)=>{
+            if(typeof data.Items!=='undefined'){resolve(nextItems?.concat(data.Items))}
+          })
+      }
+      else{resolve(data.Items)}
+    })
+  })
+}
+
+type param = {
+  TableName: string,
+  LastEvaluatedKey?: Key
+}
