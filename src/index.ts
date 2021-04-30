@@ -1,12 +1,11 @@
 import { putItem } from './dynamodb'
 import { getTweet } from './tweet-loader'
 
-exports.handler = function(): void  {
+export const handler = (): void => {
   getTweet()
     .then((tweets) => {
-      console.log(tweets.length)
-      tweets.forEach(async (tweet) => {
-        await putItem('Tweets', tweet)
+      tweets.forEach((tweet) => {
+        putItem('Tweets', tweet)
           .catch(err => console.error(err))
     })
   })

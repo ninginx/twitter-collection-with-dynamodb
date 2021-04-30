@@ -15,6 +15,7 @@ terraform/.terraform.lock.hcl
 build.sh
 
 # Logs
+*.json
 logs
 *.log
 npm-debug.log*

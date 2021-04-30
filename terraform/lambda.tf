@@ -49,6 +49,7 @@ resource "aws_lambda_function" "tweet_collect_lambda" {
   function_name = "tweet_collect_lambda"
   role          = aws_iam_role.iam_dynamo_for_lambda.arn
   handler       = "index.handler"
+  timeout = 15
 
   # The filebase64sha256() function is available in Terraform 0.11.12 and later
   # For Terraform 0.11.11 and earlier, use the base64sha256() function and the file() function:
