@@ -19,13 +19,24 @@ export const putItem= <T> (tableName: string, item: T): Promise<void> => {
   })
 }
 
+export const readItemsRecentry = (tableName: string): Promise<ItemList|undefined> => {
+  return new Promise((resolve, reject)=>{
+    const param: param = {
+      TableName: tableName
+    }
+    docClient.scan(param,(err, data)=>{
+      if(err) { reject(err) }
+      else{resolve(data.Items)}
+    })
+  })
+}
+
 export const readItemsAll = (tableName: string, LastEvaluatedKey?: Key): Promise<ItemList|undefined> => {
   return new Promise((resolve, reject)=>{
     const param: param = {
       TableName: tableName
     }
-    if(LastEvaluatedKey) { param.LastEvaluatedKey = LastEvaluatedKey }
-
+    if(LastEvaluatedKey) { param.ExclusiveStartKey = LastEvaluatedKey }
     docClient.scan(param,(err, data)=>{
       if(err) { reject(err) }
       if(data.LastEvaluatedKey) {
@@ -41,5 +52,5 @@ export const readItemsAll = (tableName: string, LastEvaluatedKey?: Key): Promise
 
 type param = {
   TableName: string,
-  LastEvaluatedKey?: Key
+  ExclusiveStartKey?: Key
 }
