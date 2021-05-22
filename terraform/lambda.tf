@@ -1,8 +1,8 @@
 variable "twitter_bearer_token" {}
 variable "twitter_id" {}
 
-resource "aws_iam_role" "iam_dynamo_for_lambda" {
-  name = "iam_dynamo_for_lambda"
+resource "aws_iam_role" "iam_dynamoclient_for_tweettable" {
+  name = "iam_dynamoclient_for_tweettable"
 
   assume_role_policy = <<EOF
 {
@@ -32,7 +32,8 @@ data "aws_iam_policy_document" "allow_dynamodb_access" {
       "dynamodb:BatchGetItem",
       "dynamodb:BatchWriteItem",
       "dynamodb:PutItem",
-      "dynamodb:UpdateItem"
+      "dynamodb:UpdateItem",
+      "dynamodb:Scan",
     ]
     resources = [ module.dynamodb.aws_dynamodb_table_arn ]
   }
@@ -40,16 +41,16 @@ data "aws_iam_policy_document" "allow_dynamodb_access" {
 
 resource "aws_iam_role_policy" "lambda_policy" {
   name = "lambda_policy"
-  role= aws_iam_role.iam_dynamo_for_lambda.id
+  role= aws_iam_role.iam_dynamoclient_for_tweettable.id
   policy = data.aws_iam_policy_document.allow_dynamodb_access.json
 }
 
 resource "aws_lambda_function" "tweet_collect_lambda" {
   filename      = "lambda.zip"
   function_name = "tweet_collect_lambda"
-  role          = aws_iam_role.iam_dynamo_for_lambda.arn
+  role          = aws_iam_role.iam_dynamoclient_for_tweettable.arn
   handler       = "index.handler"
-  timeout = 15
+  timeout = 60
 
   # The filebase64sha256() function is available in Terraform 0.11.12 and later
   # For Terraform 0.11.11 and earlier, use the base64sha256() function and the file() function:
